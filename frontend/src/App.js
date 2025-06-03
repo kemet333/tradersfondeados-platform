@@ -445,7 +445,154 @@ const FirmCard = ({ firm, onCompare, isSelected, onQuickView }) => {
   );
 };
 
-// Quick View Modal Component
+// Comparison Modal Component
+const ComparisonModal = ({ firms, isOpen, onClose }) => {
+  if (!isOpen || !firms || firms.length === 0) return null;
+
+  const getFrequencyText = (freq) => {
+    const frequencies = {
+      'weekly': 'Semanal',
+      'bi-weekly': 'Quincenal', 
+      'monthly': 'Mensual'
+    };
+    return frequencies[freq] || freq;
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="max-w-7xl w-full max-h-[90vh] overflow-y-auto">
+        <GlassCard className="relative">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-purple-300 hover:text-white transition-colors z-10"
+            title="Cerrar"
+          >
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/>
+            </svg>
+          </button>
+          
+          <div className="pr-8">
+            <h2 className="text-3xl font-bold text-white mb-8 text-center">
+              Comparación de Empresas de Fondeo
+            </h2>
+            
+            {/* Comparison Table */}
+            <div className="overflow-x-auto">
+              <div className="grid" style={{gridTemplateColumns: `200px repeat(${firms.length}, 1fr)`, minWidth: '800px'}}>
+                
+                {/* Header Row */}
+                <div className="p-4 font-semibold text-purple-200 border-b border-white/10">
+                  Características
+                </div>
+                {firms.map(firm => (
+                  <div key={firm.id} className="p-4 text-center border-b border-white/10">
+                    <img src={firm.logo_url} alt={firm.name} className="w-12 h-12 rounded-xl mx-auto mb-2 border border-white/20"/>
+                    <div className="text-white font-bold">{firm.name}</div>
+                    <div className="text-yellow-400 text-sm">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i} className={i < Math.floor(firm.rating) ? 'text-yellow-400' : 'text-gray-600'}>★</span>
+                      ))}
+                      <span className="text-purple-200 ml-1">({firm.rating})</span>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Comparison Rows */}
+                {[
+                  {
+                    label: 'División de Ganancias',
+                    getValue: (firm) => `${firm.profit_split[0]}%`,
+                    getColor: (firm) => firm.profit_split[0] >= 85 ? 'text-green-400' : 'text-white'
+                  },
+                  {
+                    label: 'Cuenta Mínima',
+                    getValue: (firm) => `$${(firm.min_account_size / 1000).toFixed(0)}K`,
+                    getColor: (firm) => firm.min_account_size <= 10000 ? 'text-green-400' : 'text-white'
+                  },
+                  {
+                    label: 'Cuenta Máxima',
+                    getValue: (firm) => `$${(firm.max_account_size / 1000).toFixed(0)}K`,
+                    getColor: (firm) => firm.max_account_size >= 200000 ? 'text-green-400' : 'text-white'
+                  },
+                  {
+                    label: 'Pérdida Máxima',
+                    getValue: (firm) => `${firm.max_drawdown}%`,
+                    getColor: (firm) => firm.max_drawdown <= 6 ? 'text-green-400' : 'text-white'
+                  },
+                  {
+                    label: 'Pérdida Diaria',
+                    getValue: (firm) => `${firm.daily_drawdown}%`,
+                    getColor: (firm) => firm.daily_drawdown <= 4 ? 'text-green-400' : 'text-white'
+                  },
+                  {
+                    label: 'Objetivo de Ganancia',
+                    getValue: (firm) => `${firm.profit_target}%`,
+                    getColor: (firm) => firm.profit_target <= 8 ? 'text-green-400' : 'text-white'
+                  },
+                  {
+                    label: 'Frecuencia de Pagos',
+                    getValue: (firm) => getFrequencyText(firm.payout_frequency),
+                    getColor: (firm) => firm.payout_frequency === 'weekly' ? 'text-green-400' : 'text-white'
+                  },
+                  {
+                    label: 'Pago Mínimo',
+                    getValue: (firm) => `$${firm.minimum_payout}`,
+                    getColor: (firm) => firm.minimum_payout <= 500 ? 'text-green-400' : 'text-white'
+                  },
+                  {
+                    label: 'Costo de Evaluación',
+                    getValue: (firm) => `$${Object.values(firm.evaluation_fee)[0]}`,
+                    getColor: (firm) => Object.values(firm.evaluation_fee)[0] <= 100 ? 'text-green-400' : 'text-white'
+                  },
+                  {
+                    label: 'Trading de Noticias',
+                    getValue: (firm) => firm.news_trading ? '✅ Sí' : '❌ No',
+                    getColor: (firm) => firm.news_trading ? 'text-green-400' : 'text-red-400'
+                  },
+                  {
+                    label: 'Expert Advisors',
+                    getValue: (firm) => firm.expert_advisors ? '✅ Sí' : '❌ No',
+                    getColor: (firm) => firm.expert_advisors ? 'text-green-400' : 'text-red-400'
+                  },
+                  {
+                    label: 'Plan de Escalado',
+                    getValue: (firm) => firm.scaling_plan ? '✅ Sí' : '❌ No',
+                    getColor: (firm) => firm.scaling_plan ? 'text-green-400' : 'text-red-400'
+                  }
+                ].map((row, idx) => (
+                  <React.Fragment key={idx}>
+                    <div className="p-4 text-purple-200 font-medium border-b border-white/5 bg-white/5">
+                      {row.label}
+                    </div>
+                    {firms.map(firm => (
+                      <div key={firm.id} className={`p-4 text-center border-b border-white/5 font-semibold ${row.getColor(firm)}`}>
+                        {row.getValue(firm)}
+                      </div>
+                    ))}
+                  </React.Fragment>
+                ))}
+
+                {/* Action Row */}
+                <div className="p-4"></div>
+                {firms.map(firm => (
+                  <div key={firm.id} className="p-4 text-center">
+                    <RippleButton 
+                      onClick={() => window.open(firm.website_url, '_blank')}
+                      className="w-full text-sm"
+                    >
+                      Visitar {firm.name}
+                    </RippleButton>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </GlassCard>
+      </div>
+    </div>
+  );
+};
 const QuickViewModal = ({ firm, isOpen, onClose }) => {
   if (!isOpen || !firm) return null;
 
