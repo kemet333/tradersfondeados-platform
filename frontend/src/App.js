@@ -834,10 +834,35 @@ function App() {
                 <p className="text-purple-300 text-sm">www.tradersfondeados.com</p>
               </div>
             </div>
-            <div className="hidden md:flex items-center space-x-6 text-purple-200">
-              <span>💰 Mejores Ofertas</span>
-              <span>📊 Comparador</span>
-              <span>⭐ Reseñas</span>
+            <div className="hidden md:flex items-center space-x-8">
+              <button 
+                onClick={() => document.getElementById('empresas').scrollIntoView({behavior: 'smooth'})}
+                className="text-purple-200 hover:text-white transition-colors cursor-pointer flex items-center space-x-2"
+              >
+                <span>💰</span>
+                <span>Empresas</span>
+              </button>
+              <button 
+                onClick={() => document.getElementById('comparador').scrollIntoView({behavior: 'smooth'})}
+                className="text-purple-200 hover:text-white transition-colors cursor-pointer flex items-center space-x-2"
+              >
+                <span>📊</span>
+                <span>Comparador</span>
+              </button>
+              <button 
+                onClick={() => document.getElementById('comunidad').scrollIntoView({behavior: 'smooth'})}
+                className="text-purple-200 hover:text-white transition-colors cursor-pointer flex items-center space-x-2"
+              >
+                <span>👥</span>
+                <span>Comunidad</span>
+              </button>
+              <RippleButton 
+                onClick={() => document.getElementById('comunidad').scrollIntoView({behavior: 'smooth'})}
+                variant="primary"
+                className="text-sm px-6 py-2"
+              >
+                Acceso VIP
+              </RippleButton>
             </div>
           </div>
         </nav>
