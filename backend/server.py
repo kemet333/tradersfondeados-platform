@@ -298,19 +298,17 @@ PROP_FIRMS_DATA = [
 async def startup_event():
     """Initialize database with prop firms data"""
     try:
-        # Check if firms already exist
-        existing_count = await db.prop_firms.count_documents({})
-        if existing_count == 0:
-            # Add unique IDs and insert firms
-            firms_with_ids = []
-            for firm_data in PROP_FIRMS_DATA:
-                firm = PropFirm(**firm_data)
-                firms_with_ids.append(firm.dict())
-            
-            await db.prop_firms.insert_many(firms_with_ids)
-            logging.info(f"Seeded database with {len(firms_with_ids)} prop firms")
-        else:
-            logging.info(f"Database already contains {existing_count} prop firms")
+        # Clear existing data to update with Spanish content
+        await db.prop_firms.delete_many({})
+        
+        # Add unique IDs and insert firms
+        firms_with_ids = []
+        for firm_data in PROP_FIRMS_DATA:
+            firm = PropFirm(**firm_data)
+            firms_with_ids.append(firm.dict())
+        
+        await db.prop_firms.insert_many(firms_with_ids)
+        logging.info(f"Seeded database with {len(firms_with_ids)} Spanish prop firms")
     except Exception as e:
         logging.error(f"Error initializing database: {e}")
 
