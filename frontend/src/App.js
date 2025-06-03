@@ -158,24 +158,24 @@ const RippleButton = ({ children, onClick, className = "", variant = "primary" }
 // Advanced Filter Sidebar Component
 const FilterSidebar = ({ filters, setFilters, onApplyFilters, onReset }) => {
   const platforms = ["MetaTrader 4", "MetaTrader 5", "cTrader", "NinjaTrader", "TradingView"];
-  const payoutFrequencies = ["weekly", "bi-weekly", "monthly"];
+  const payoutFrequencies = ["semanal", "quincenal", "mensual"];
 
   return (
     <GlassCard className="sticky top-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-white flex items-center">
           <span className="w-2 h-8 bg-gradient-to-b from-purple-400 to-pink-400 rounded-full mr-3"></span>
-          Advanced Filters
+          Filtros Avanzados
         </h3>
         <RippleButton onClick={onReset} variant="ghost" className="text-xs px-4 py-2">
-          Reset
+          Limpiar
         </RippleButton>
       </div>
       
       <div className="space-y-6">
         {/* Account Size Range */}
         <div>
-          <label className="block text-purple-200 text-sm font-medium mb-3">Account Size Range</label>
+          <label className="block text-purple-200 text-sm font-medium mb-3">Tamaño de Cuenta</label>
           <div className="space-y-3">
             <div className="relative">
               <input
@@ -200,7 +200,7 @@ const FilterSidebar = ({ filters, setFilters, onApplyFilters, onReset }) => {
 
         {/* Profit Split */}
         <div>
-          <label className="block text-purple-200 text-sm font-medium mb-3">Minimum Profit Split</label>
+          <label className="block text-purple-200 text-sm font-medium mb-3">División de Ganancias Mínima</label>
           <div className="relative">
             <input
               type="range"
@@ -223,13 +223,13 @@ const FilterSidebar = ({ filters, setFilters, onApplyFilters, onReset }) => {
 
         {/* Trading Platform */}
         <div>
-          <label className="block text-purple-200 text-sm font-medium mb-3">Trading Platform</label>
+          <label className="block text-purple-200 text-sm font-medium mb-3">Plataforma de Trading</label>
           <select
             value={filters.platform || ''}
             onChange={(e) => setFilters(prev => ({...prev, platform: e.target.value}))}
             className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
           >
-            <option value="">All Platforms</option>
+            <option value="">Todas las Plataformas</option>
             {platforms.map(platform => (
               <option key={platform} value={platform} className="bg-gray-800">{platform}</option>
             ))}
@@ -238,33 +238,36 @@ const FilterSidebar = ({ filters, setFilters, onApplyFilters, onReset }) => {
 
         {/* Payout Frequency */}
         <div>
-          <label className="block text-purple-200 text-sm font-medium mb-3">Payout Frequency</label>
+          <label className="block text-purple-200 text-sm font-medium mb-3">Frecuencia de Pagos</label>
           <div className="grid grid-cols-1 gap-2">
-            {payoutFrequencies.map(freq => (
-              <label key={freq} className="flex items-center space-x-3 cursor-pointer group">
-                <input
-                  type="radio"
-                  name="payoutFrequency"
-                  value={freq}
-                  checked={filters.payoutFrequency === freq}
-                  onChange={(e) => setFilters(prev => ({...prev, payoutFrequency: e.target.value}))}
-                  className="w-4 h-4 text-purple-600 focus:ring-purple-400 focus:ring-2"
-                />
-                <span className="text-purple-200 group-hover:text-white transition-colors capitalize">
-                  {freq.replace('-', ' ')}
-                </span>
-              </label>
-            ))}
+            {payoutFrequencies.map((freq, idx) => {
+              const englishFreq = ["weekly", "bi-weekly", "monthly"][idx];
+              return (
+                <label key={freq} className="flex items-center space-x-3 cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="payoutFrequency"
+                    value={englishFreq}
+                    checked={filters.payoutFrequency === englishFreq}
+                    onChange={(e) => setFilters(prev => ({...prev, payoutFrequency: e.target.value}))}
+                    className="w-4 h-4 text-purple-600 focus:ring-purple-400 focus:ring-2"
+                  />
+                  <span className="text-purple-200 group-hover:text-white transition-colors capitalize">
+                    {freq}
+                  </span>
+                </label>
+              );
+            })}
           </div>
         </div>
 
         {/* Feature Toggles */}
         <div className="space-y-3">
-          <label className="block text-purple-200 text-sm font-medium">Features</label>
+          <label className="block text-purple-200 text-sm font-medium">Características</label>
           {[
-            { key: 'newsTrading', label: 'News Trading Allowed', icon: '📈' },
+            { key: 'newsTrading', label: 'Trading en Noticias', icon: '📈' },
             { key: 'expertAdvisors', label: 'Expert Advisors', icon: '🤖' },
-            { key: 'scalingPlan', label: 'Scaling Available', icon: '📊' },
+            { key: 'scalingPlan', label: 'Plan de Escalado', icon: '📊' },
           ].map(({ key, label, icon }) => (
             <label key={key} className="flex items-center space-x-3 cursor-pointer group bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
               <input
@@ -282,7 +285,7 @@ const FilterSidebar = ({ filters, setFilters, onApplyFilters, onReset }) => {
         </div>
 
         <RippleButton onClick={onApplyFilters} className="w-full">
-          Apply Filters
+          Aplicar Filtros
         </RippleButton>
       </div>
     </GlassCard>
@@ -296,6 +299,15 @@ const FirmCard = ({ firm, onCompare, isSelected, onQuickView }) => {
   const handleVisitSite = () => {
     setShowConfetti(true);
     setTimeout(() => window.open(firm.website_url, '_blank'), 500);
+  };
+
+  const getFrequencyText = (freq) => {
+    const frequencies = {
+      'weekly': 'semanal',
+      'bi-weekly': 'quincenal', 
+      'monthly': 'mensual'
+    };
+    return frequencies[freq] || freq;
   };
 
   return (
@@ -331,7 +343,7 @@ const FirmCard = ({ firm, onCompare, isSelected, onQuickView }) => {
                       </span>
                     ))}
                   </div>
-                  <span className="text-purple-200 text-sm">({firm.total_reviews})</span>
+                  <span className="text-purple-200 text-sm">({firm.total_reviews} reseñas)</span>
                 </div>
               </div>
             </div>
@@ -344,6 +356,7 @@ const FirmCard = ({ firm, onCompare, isSelected, onQuickView }) => {
                     ? 'bg-purple-600 text-white scale-110' 
                     : 'bg-white/10 text-purple-200 hover:bg-purple-600/20 hover:text-white hover:scale-105'
                 }`}
+                title={isSelected ? "Quitar de comparación" : "Agregar a comparación"}
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -355,33 +368,33 @@ const FirmCard = ({ firm, onCompare, isSelected, onQuickView }) => {
           {/* Enhanced Key Stats */}
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl p-3 border border-green-500/30 hover:border-green-400/50 transition-colors">
-              <div className="text-green-300 text-sm font-medium">Profit Split</div>
+              <div className="text-green-300 text-sm font-medium">División</div>
               <div className="text-white text-xl font-bold">{firm.profit_split[0]}%</div>
-              <div className="text-green-200 text-xs">You keep</div>
+              <div className="text-green-200 text-xs">Para ti</div>
             </div>
             <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-xl p-3 border border-blue-500/30 hover:border-blue-400/50 transition-colors">
-              <div className="text-blue-300 text-sm font-medium">Min Account</div>
+              <div className="text-blue-300 text-sm font-medium">Cuenta Mín</div>
               <div className="text-white text-xl font-bold">${(firm.min_account_size / 1000).toFixed(0)}K</div>
-              <div className="text-blue-200 text-xs">Starting size</div>
+              <div className="text-blue-200 text-xs">Inicial</div>
             </div>
           </div>
 
           {/* Enhanced Stats Grid */}
           <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
             <div className="flex justify-between">
-              <span className="text-purple-300">Max Drawdown:</span>
+              <span className="text-purple-300">Pérdida Máx:</span>
               <span className="text-white font-medium">{firm.max_drawdown}%</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-purple-300">Payout:</span>
-              <span className="text-white font-medium capitalize">{firm.payout_frequency}</span>
+              <span className="text-purple-300">Pagos:</span>
+              <span className="text-white font-medium capitalize">{getFrequencyText(firm.payout_frequency)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-purple-300">Min Payout:</span>
+              <span className="text-purple-300">Pago Mín:</span>
               <span className="text-white font-medium">${firm.minimum_payout}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-purple-300">Eval Fee:</span>
+              <span className="text-purple-300">Costo Eval:</span>
               <span className="text-white font-medium">${Object.values(firm.evaluation_fee)[0]}</span>
             </div>
           </div>
@@ -394,10 +407,10 @@ const FirmCard = ({ firm, onCompare, isSelected, onQuickView }) => {
           {/* Enhanced Features */}
           <div className="flex flex-wrap gap-2 mb-4">
             {[
-              { condition: firm.news_trading, label: 'News Trading', color: 'green' },
+              { condition: firm.news_trading, label: 'Trading Noticias', color: 'green' },
               { condition: firm.expert_advisors, label: 'EAs', color: 'blue' },
-              { condition: firm.scaling_plan, label: 'Scaling', color: 'purple' },
-              { condition: true, label: `${firm.payout_frequency} payouts`, color: 'pink' }
+              { condition: firm.scaling_plan, label: 'Escalado', color: 'purple' },
+              { condition: true, label: `Pagos ${getFrequencyText(firm.payout_frequency)}`, color: 'pink' }
             ].filter(item => item.condition).slice(0, 4).map((feature, idx) => (
               <span 
                 key={idx}
@@ -416,14 +429,14 @@ const FirmCard = ({ firm, onCompare, isSelected, onQuickView }) => {
                 variant="secondary"
                 className="flex-1 text-sm"
               >
-                Quick View
+                Vista Rápida
               </RippleButton>
             )}
             <RippleButton 
               onClick={handleVisitSite}
               className="flex-1 text-sm"
             >
-              Visit Site →
+              Visitar Sitio →
             </RippleButton>
           </div>
         </div>
@@ -436,6 +449,15 @@ const FirmCard = ({ firm, onCompare, isSelected, onQuickView }) => {
 const QuickViewModal = ({ firm, isOpen, onClose }) => {
   if (!isOpen || !firm) return null;
 
+  const getFrequencyText = (freq) => {
+    const frequencies = {
+      'weekly': 'Semanal',
+      'bi-weekly': 'Quincenal', 
+      'monthly': 'Mensual'
+    };
+    return frequencies[freq] || freq;
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -443,6 +465,7 @@ const QuickViewModal = ({ firm, isOpen, onClose }) => {
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-purple-300 hover:text-white transition-colors"
+            title="Cerrar"
           >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/>
@@ -461,21 +484,21 @@ const QuickViewModal = ({ firm, isOpen, onClose }) => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
               <div className="text-center p-4 bg-white/5 rounded-xl">
                 <div className="text-2xl font-bold text-green-400">{firm.profit_split[0]}%</div>
-                <div className="text-purple-200 text-sm">Profit Split</div>
+                <div className="text-purple-200 text-sm">División de Ganancias</div>
               </div>
               <div className="text-center p-4 bg-white/5 rounded-xl">
                 <div className="text-2xl font-bold text-blue-400">${(firm.min_account_size/1000).toFixed(0)}K</div>
-                <div className="text-purple-200 text-sm">Min Account</div>
+                <div className="text-purple-200 text-sm">Cuenta Mínima</div>
               </div>
               <div className="text-center p-4 bg-white/5 rounded-xl">
                 <div className="text-2xl font-bold text-yellow-400">{firm.rating}</div>
-                <div className="text-purple-200 text-sm">Rating</div>
+                <div className="text-purple-200 text-sm">Calificación</div>
               </div>
             </div>
             
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-bold text-white mb-2">Platforms</h3>
+                <h3 className="text-lg font-bold text-white mb-2">Plataformas</h3>
                 <div className="flex flex-wrap gap-2">
                   {firm.trading_platforms.map(platform => (
                     <span key={platform} className="px-3 py-1 bg-blue-500/20 rounded-full text-blue-200 text-sm">
@@ -486,7 +509,7 @@ const QuickViewModal = ({ firm, isOpen, onClose }) => {
               </div>
               
               <div>
-                <h3 className="text-lg font-bold text-white mb-2">Instruments</h3>
+                <h3 className="text-lg font-bold text-white mb-2">Instrumentos</h3>
                 <div className="flex flex-wrap gap-2">
                   {firm.instruments.map(instrument => (
                     <span key={instrument} className="px-3 py-1 bg-purple-500/20 rounded-full text-purple-200 text-sm">
@@ -495,11 +518,30 @@ const QuickViewModal = ({ firm, isOpen, onClose }) => {
                   ))}
                 </div>
               </div>
+
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-purple-300">Frecuencia de Pagos:</span>
+                  <span className="text-white font-medium ml-2">{getFrequencyText(firm.payout_frequency)}</span>
+                </div>
+                <div>
+                  <span className="text-purple-300">Pago Mínimo:</span>
+                  <span className="text-white font-medium ml-2">${firm.minimum_payout}</span>
+                </div>
+                <div>
+                  <span className="text-purple-300">Pérdida Máxima:</span>
+                  <span className="text-white font-medium ml-2">{firm.max_drawdown}%</span>
+                </div>
+                <div>
+                  <span className="text-purple-300">Pérdida Diaria:</span>
+                  <span className="text-white font-medium ml-2">{firm.daily_drawdown}%</span>
+                </div>
+              </div>
             </div>
             
             <div className="mt-6">
               <RippleButton onClick={() => window.open(firm.website_url, '_blank')} className="w-full">
-                Visit {firm.name} →
+                Visitar {firm.name} →
               </RippleButton>
             </div>
           </div>
@@ -518,23 +560,23 @@ const StatisticsBar = ({ stats }) => {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
         <div className="text-center">
           <div className="text-3xl font-bold text-white">{stats.total_firms}</div>
-          <div className="text-purple-200 text-sm">Total Firms</div>
+          <div className="text-purple-200 text-sm">Empresas Total</div>
         </div>
         <div className="text-center">
           <div className="text-3xl font-bold text-green-400">{stats.avg_profit_split}%</div>
-          <div className="text-purple-200 text-sm">Avg Profit Split</div>
+          <div className="text-purple-200 text-sm">División Promedio</div>
         </div>
         <div className="text-center">
           <div className="text-3xl font-bold text-yellow-400">{stats.avg_rating}</div>
-          <div className="text-purple-200 text-sm">Avg Rating</div>
+          <div className="text-purple-200 text-sm">Calificación Promedio</div>
         </div>
         <div className="text-center">
           <div className="text-3xl font-bold text-blue-400">${stats.lowest_evaluation_fee}</div>
-          <div className="text-purple-200 text-sm">Lowest Fee</div>
+          <div className="text-purple-200 text-sm">Costo Más Bajo</div>
         </div>
         <div className="text-center">
           <div className="text-3xl font-bold text-purple-400">{stats.most_popular_platform}</div>
-          <div className="text-purple-200 text-sm">Top Platform</div>
+          <div className="text-purple-200 text-sm">Plataforma Top</div>
         </div>
       </div>
     </GlassCard>
@@ -611,7 +653,7 @@ function App() {
       } else if (prev.length < 4) {
         return [...prev, firmId];
       } else {
-        alert('Maximum 4 firms can be compared');
+        alert('Máximo 4 empresas pueden ser comparadas');
         return prev;
       }
     });
@@ -633,25 +675,45 @@ function App() {
       </div>
 
       <div className="relative z-10">
+        {/* Header Navigation */}
+        <nav className="container mx-auto px-6 pt-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-xl">TF</span>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white">Traders Fondeados</h1>
+                <p className="text-purple-300 text-sm">www.tradersfondeados.com</p>
+              </div>
+            </div>
+            <div className="hidden md:flex items-center space-x-6 text-purple-200">
+              <span>💰 Mejores Ofertas</span>
+              <span>📊 Comparador</span>
+              <span>⭐ Reseñas</span>
+            </div>
+          </div>
+        </nav>
+
         {/* Hero Section */}
-        <div className="container mx-auto px-6 pt-20 pb-16">
+        <div className="container mx-auto px-6 pt-16 pb-16">
           <div className="text-center mb-16">
             <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">
-              <TypingText text="Find Your Perfect" speed={80} />
+              <TypingText text="Encuentra Tu Empresa" speed={80} />
               <br />
               <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Prop Firm
+                De Fondeo Perfecta
               </span>
             </h1>
             <p className="text-xl text-purple-200 max-w-2xl mx-auto mb-8">
-              Compare top proprietary trading firms, analyze profit splits, and discover the perfect match for your trading journey.
+              Compara las mejores empresas de trading con fondeo, analiza divisiones de ganancias y descubre la opción perfecta para tu trading.
             </p>
             
             {/* Enhanced Search Bar */}
             <div className="max-w-lg mx-auto relative">
               <input
                 type="text"
-                placeholder="Search by firm name or description..."
+                placeholder="Buscar por nombre de empresa o descripción..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-6 py-4 pl-12 text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 focus:bg-white/15"
@@ -689,7 +751,7 @@ function App() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <span className="text-white font-medium">
-                        {selectedFirms.length} firm(s) selected for comparison
+                        {selectedFirms.length} empresa(s) seleccionada(s) para comparar
                       </span>
                       <div className="flex space-x-2">
                         {selectedFirms.map((firmId, idx) => {
@@ -700,6 +762,7 @@ function App() {
                               <button 
                                 onClick={() => handleCompareToggle(firmId)}
                                 className="text-purple-300 hover:text-white"
+                                title="Quitar"
                               >
                                 ×
                               </button>
@@ -714,14 +777,14 @@ function App() {
                         variant="ghost"
                         className="text-sm"
                       >
-                        Clear All
+                        Limpiar Todo
                       </RippleButton>
                       {selectedFirms.length >= 2 && (
                         <RippleButton 
                           onClick={() => setShowComparison(true)}
                           className="text-sm"
                         >
-                          Compare Now ({selectedFirms.length})
+                          Comparar Ahora ({selectedFirms.length})
                         </RippleButton>
                       )}
                     </div>
@@ -742,16 +805,16 @@ function App() {
                   <div className="flex items-center justify-between mb-6">
                     <div>
                       <h2 className="text-2xl font-bold text-white">
-                        {filteredFirms.length} Prop Firms Found
+                        {filteredFirms.length} Empresas de Fondeo Encontradas
                       </h2>
                       <p className="text-purple-200">
-                        {searchQuery ? `Results for "${searchQuery}"` : 'Compare the best proprietary trading firms in the industry'}
+                        {searchQuery ? `Resultados para "${searchQuery}"` : 'Compara las mejores empresas de trading con fondeo de la industria'}
                       </p>
                     </div>
                     
                     {Object.keys(filters).length > 0 && (
                       <RippleButton onClick={resetFilters} variant="ghost" className="text-sm">
-                        Clear Filters
+                        Limpiar Filtros
                       </RippleButton>
                     )}
                   </div>
@@ -774,16 +837,16 @@ function App() {
               {!loading && filteredFirms.length === 0 && (
                 <div className="text-center py-16">
                   <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-2xl font-bold text-white mb-2">No firms found</h3>
+                  <h3 className="text-2xl font-bold text-white mb-2">No se encontraron empresas</h3>
                   <p className="text-purple-200 mb-4">
-                    {searchQuery ? `No results for "${searchQuery}"` : 'Try adjusting your filters'}
+                    {searchQuery ? `Sin resultados para "${searchQuery}"` : 'Intenta ajustar tus filtros'}
                   </p>
                   {(searchQuery || Object.keys(filters).length > 0) && (
                     <RippleButton onClick={() => {
                       setSearchQuery('');
                       resetFilters();
                     }}>
-                      Reset Search & Filters
+                      Limpiar Búsqueda y Filtros
                     </RippleButton>
                   )}
                 </div>
@@ -797,20 +860,23 @@ function App() {
           <div className="container mx-auto px-6 py-8">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-white mb-2">
-                🚀 Prop Firm Comparison Platform
+                🚀 Traders Fondeados
               </h3>
               <p className="text-purple-200 mb-4">
-                Your gateway to finding the perfect proprietary trading firm
+                Tu portal para encontrar la empresa de fondeo perfecta
               </p>
-              <div className="flex justify-center space-x-6 text-sm text-purple-300">
-                <span>6 Top Firms</span>
+              <div className="flex justify-center space-x-6 text-sm text-purple-300 mb-4">
+                <span>6 Mejores Empresas</span>
                 <span>•</span>
-                <span>Real-time Data</span>
+                <span>Datos en Tiempo Real</span>
                 <span>•</span>
-                <span>Advanced Filtering</span>
+                <span>Filtros Avanzados</span>
                 <span>•</span>
-                <span>Side-by-side Comparison</span>
+                <span>Comparación Lado a Lado</span>
               </div>
+              <p className="text-purple-400 font-semibold">
+                www.tradersfondeados.com
+              </p>
             </div>
           </div>
         </div>
