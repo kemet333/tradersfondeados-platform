@@ -422,22 +422,46 @@ const FirmCard = ({ firm, onCompare, isSelected, onQuickView }) => {
           </div>
 
           {/* Enhanced Actions */}
-          <div className="flex space-x-3">
+          <div className="space-y-3">
             {onQuickView && (
               <RippleButton 
                 onClick={() => onQuickView(firm)}
                 variant="secondary"
-                className="flex-1 text-sm"
+                className="w-full text-sm"
               >
                 Vista Rápida
               </RippleButton>
             )}
-            <RippleButton 
-              onClick={handleVisitSite}
-              className="flex-1 text-sm"
-            >
-              Visitar Sitio →
-            </RippleButton>
+            
+            <div className="grid grid-cols-2 gap-2">
+              <RippleButton 
+                onClick={() => {
+                  // Show confetti and redirect to purchase with community access
+                  setShowConfetti(true);
+                  setTimeout(() => {
+                    const purchaseUrl = `${firm.website_url}?ref=tradersfondeados&community=vip`;
+                    window.open(purchaseUrl, '_blank');
+                  }, 500);
+                }}
+                className="text-sm bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+              >
+                💎 Comprar + VIP
+              </RippleButton>
+              
+              <RippleButton 
+                onClick={handleVisitSite}
+                variant="secondary"
+                className="text-sm"
+              >
+                Ver Sitio
+              </RippleButton>
+            </div>
+            
+            <div className="text-center">
+              <span className="text-xs text-yellow-400 font-medium">
+                ✨ Incluye acceso a Comunidad VIP
+              </span>
+            </div>
           </div>
         </div>
       </GlassCard>
