@@ -1030,6 +1030,181 @@ function App() {
           </div>
         </div>
 
+        {/* VIP Community Section */}
+        <div id="comunidad" className="py-20 bg-black/30 backdrop-blur-xl border-t border-white/10">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
+                Comunidad
+                <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent"> VIP Exclusiva</span>
+              </h2>
+              <p className="text-xl text-purple-200 max-w-3xl mx-auto">
+                Únete a la comunidad privada más selecta de traders fondeados verificados. 
+                Solo para miembros que compren su challenge a través de Traders Fondeados.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              {/* Left Side - Benefits */}
+              <div className="space-y-8">
+                <GlassCard className="p-8">
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-2xl flex items-center justify-center">
+                      <span className="text-2xl">👥</span>
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-white">Acceso Exclusivo</h3>
+                      <p className="text-purple-200">Solo traders fondeados verificados</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {[
+                      "🎯 Estrategias de trading en vivo",
+                      "📊 Análisis de mercado diario",
+                      "💬 Chat privado 24/7",
+                      "🏆 Mentorías con traders exitosos",
+                      "📈 Señales exclusivas de trading",
+                      "🎓 Masterclasses semanales",
+                      "💰 Tips de gestión de riesgo",
+                      "🤝 Networking con professionals"
+                    ].map((benefit, idx) => (
+                      <div key={idx} className="flex items-center space-x-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors">
+                        <span className="text-lg">{benefit.split(' ')[0]}</span>
+                        <span className="text-purple-200">{benefit.substring(2)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </GlassCard>
+              </div>
+
+              {/* Right Side - CTA */}
+              <div className="space-y-8">
+                <GlassCard className="p-8 text-center bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-yellow-400/30">
+                  <div className="mb-6">
+                    <div className="w-24 h-24 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-4xl">🔥</span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-white mb-2">
+                      ¡Únete Ahora!
+                    </h3>
+                    <p className="text-purple-200">
+                      Compra tu challenge y obtén acceso inmediato
+                    </p>
+                  </div>
+
+                  <div className="bg-black/30 rounded-2xl p-6 mb-6">
+                    <div className="text-sm text-purple-300 mb-2">Valor de la comunidad</div>
+                    <div className="text-3xl font-bold text-white mb-1">
+                      <span className="line-through text-gray-500">$297/mes</span>
+                    </div>
+                    <div className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                      GRATIS
+                    </div>
+                    <div className="text-sm text-purple-300 mt-2">
+                      Al comprar cualquier challenge
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <RippleButton 
+                      onClick={() => window.open('https://wa.me/1234567890?text=Hola! Me interesa la comunidad VIP de Traders Fondeados', '_blank')}
+                      className="w-full py-4 text-lg bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
+                    >
+                      💬 Contactar por WhatsApp
+                    </RippleButton>
+                    
+                    <RippleButton 
+                      onClick={() => window.open('https://t.me/tradersfondeados', '_blank')}
+                      variant="secondary"
+                      className="w-full py-4"
+                    >
+                      📱 Únete a Telegram
+                    </RippleButton>
+                  </div>
+
+                  <div className="mt-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
+                    <div className="flex items-center justify-center space-x-2 text-green-400 font-semibold">
+                      <span>✅</span>
+                      <span>Verificación instantánea</span>
+                    </div>
+                    <p className="text-sm text-green-300 mt-2">
+                      Tu acceso se activa automáticamente al confirmar tu compra
+                    </p>
+                  </div>
+                </GlassCard>
+
+                {/* Testimonials */}
+                <GlassCard className="p-6">
+                  <h4 className="text-lg font-bold text-white mb-4 text-center">
+                    💬 Lo que dicen nuestros miembros
+                  </h4>
+                  <div className="space-y-4">
+                    {[
+                      {
+                        name: "Carlos M.",
+                        firm: "FTMO - $100K",
+                        text: "La comunidad me ayudó a pasar mi evaluación. Las estrategias son oro puro! 🔥"
+                      },
+                      {
+                        name: "Ana L.",
+                        firm: "MyForexFunds - $50K", 
+                        text: "Networking increíble. Encontré mi mentor aquí y ahora soy consistente 📈"
+                      }
+                    ].map((testimonial, idx) => (
+                      <div key={idx} className="bg-white/5 rounded-xl p-4">
+                        <p className="text-purple-200 text-sm italic mb-2">"{testimonial.text}"</p>
+                        <div className="flex justify-between items-center">
+                          <span className="font-semibold text-white text-sm">{testimonial.name}</span>
+                          <span className="text-xs text-green-400">{testimonial.firm}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </GlassCard>
+              </div>
+            </div>
+
+            {/* Requirements Section */}
+            <div className="mt-16">
+              <GlassCard className="p-8 bg-blue-500/10 border-blue-400/30">
+                <h3 className="text-2xl font-bold text-white text-center mb-6">
+                  📋 Requisitos para Acceso VIP
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">💳</span>
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">1. Compra tu Challenge</h4>
+                    <p className="text-purple-200 text-sm">
+                      Adquiere cualquier challenge de nuestras empresas asociadas a través de Traders Fondeados
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">✅</span>
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">2. Verificación Automática</h4>
+                    <p className="text-purple-200 text-sm">
+                      Tu cuenta se verifica automáticamente al confirmar tu compra através de nuestro sistema
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">🎉</span>
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">3. Acceso Inmediato</h4>
+                    <p className="text-purple-200 text-sm">
+                      Recibe tu invitación a la comunidad privada en menos de 24 horas
+                    </p>
+                  </div>
+                </div>
+              </GlassCard>
+            </div>
+          </div>
+        </div>
+
         {/* Footer */}
         <div className="border-t border-white/10 bg-black/20 backdrop-blur-xl">
           <div className="container mx-auto px-6 py-8">
