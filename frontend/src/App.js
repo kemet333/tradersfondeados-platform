@@ -1038,6 +1038,13 @@ function App() {
         isOpen={!!quickViewFirm}
         onClose={() => setQuickViewFirm(null)}
       />
+
+      {/* Comparison Modal */}
+      <ComparisonModal 
+        firms={selectedFirms.map(id => allFirms.find(f => f.id === id)).filter(Boolean)}
+        isOpen={showComparison}
+        onClose={() => setShowComparison(false)}
+      />
     </div>
   );
 }
