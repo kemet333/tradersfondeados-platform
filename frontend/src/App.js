@@ -900,7 +900,7 @@ function App() {
         </div>
 
         {/* Main Content */}
-        <div className="container mx-auto px-6 pb-16">
+        <div id="empresas" className="container mx-auto px-6 pb-16">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Advanced Filters Sidebar */}
             <div className="lg:w-1/4">
@@ -913,7 +913,7 @@ function App() {
             </div>
 
             {/* Main Content Area */}
-            <div className="lg:w-3/4">
+            <div id="comparador" className="lg:w-3/4">
               {/* Statistics */}
               <StatisticsBar stats={statistics} />
 
