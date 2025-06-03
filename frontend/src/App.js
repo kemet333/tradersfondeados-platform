@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 
@@ -120,121 +119,8 @@ const RippleButton = ({ children, onClick, className = "", variant = "primary" }
   );
 };
 
-// Filter Sidebar Component
-const FilterSidebar = ({ filters, setFilters, onApplyFilters }) => {
-  const platforms = ["MetaTrader 4", "MetaTrader 5", "cTrader", "NinjaTrader", "TradingView"];
-  const payoutFrequencies = ["weekly", "bi-weekly", "monthly"];
-
-  return (
-    <GlassCard className="sticky top-6">
-      <h3 className="text-xl font-bold text-white mb-6 flex items-center">
-        <span className="w-2 h-8 bg-gradient-to-b from-purple-400 to-pink-400 rounded-full mr-3"></span>
-        Filters
-      </h3>
-      
-      <div className="space-y-6">
-        {/* Account Size */}
-        <div>
-          <label className="block text-purple-200 text-sm font-medium mb-3">Min Account Size</label>
-          <div className="relative">
-            <input
-              type="range"
-              min="5000"
-              max="100000"
-              step="5000"
-              value={filters.minAccountSize || 5000}
-              onChange={(e) => setFilters(prev => ({...prev, minAccountSize: parseInt(e.target.value)}))}
-              className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer slider"
-            />
-            <div className="flex justify-between text-xs text-purple-300 mt-2">
-              <span>$5K</span>
-              <span className="text-white font-medium">${((filters.minAccountSize || 5000) / 1000).toFixed(0)}K</span>
-              <span>$100K</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Profit Split */}
-        <div>
-          <label className="block text-purple-200 text-sm font-medium mb-3">Min Profit Split</label>
-          <div className="relative">
-            <input
-              type="range"
-              min="70"
-              max="90"
-              step="5"
-              value={filters.minProfitSplit || 70}
-              onChange={(e) => setFilters(prev => ({...prev, minProfitSplit: parseInt(e.target.value)}))}
-              className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer slider"
-            />
-            <div className="flex justify-between text-xs text-purple-300 mt-2">
-              <span>70%</span>
-              <span className="text-white font-medium">{filters.minProfitSplit || 70}%</span>
-              <span>90%</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Platform */}
-        <div>
-          <label className="block text-purple-200 text-sm font-medium mb-3">Platform</label>
-          <select
-            value={filters.platform || ''}
-            onChange={(e) => setFilters(prev => ({...prev, platform: e.target.value}))}
-            className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
-          >
-            <option value="">All Platforms</option>
-            {platforms.map(platform => (
-              <option key={platform} value={platform} className="bg-gray-800">{platform}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Payout Frequency */}
-        <div>
-          <label className="block text-purple-200 text-sm font-medium mb-3">Payout Frequency</label>
-          <select
-            value={filters.payoutFrequency || ''}
-            onChange={(e) => setFilters(prev => ({...prev, payoutFrequency: e.target.value}))}
-            className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
-          >
-            <option value="">All Frequencies</option>
-            {payoutFrequencies.map(freq => (
-              <option key={freq} value={freq} className="bg-gray-800">{freq}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Boolean Filters */}
-        <div className="space-y-3">
-          {[
-            { key: 'newsTrading', label: 'News Trading' },
-            { key: 'expertAdvisors', label: 'Expert Advisors' },
-          ].map(({ key, label }) => (
-            <label key={key} className="flex items-center space-x-3 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={filters[key] || false}
-                onChange={(e) => setFilters(prev => ({...prev, [key]: e.target.checked}))}
-                className="w-5 h-5 rounded border-white/20 bg-white/10 text-purple-600 focus:ring-purple-400 focus:ring-2"
-              />
-              <span className="text-purple-200 group-hover:text-white transition-colors">{label}</span>
-            </label>
-          ))}
-        </div>
-
-        <RippleButton onClick={onApplyFilters} className="w-full">
-          Apply Filters
-        </RippleButton>
-      </div>
-    </GlassCard>
-  );
-};
-
 // Firm Card Component
-const FirmCard = ({ firm, onCompare, isSelected }) => {
-  const navigate = useNavigate();
-
+const FirmCard = ({ firm }) => {
   return (
     <GlassCard className="h-full">
       <div className="flex flex-col h-full">
@@ -260,19 +146,6 @@ const FirmCard = ({ firm, onCompare, isSelected }) => {
               </div>
             </div>
           </div>
-          
-          <button
-            onClick={() => onCompare(firm.id)}
-            className={`p-2 rounded-xl transition-all duration-300 ${
-              isSelected 
-                ? 'bg-purple-600 text-white' 
-                : 'bg-white/10 text-purple-200 hover:bg-purple-600/20 hover:text-white'
-            }`}
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </button>
         </div>
 
         {/* Key Stats */}
@@ -310,13 +183,6 @@ const FirmCard = ({ firm, onCompare, isSelected }) => {
         {/* Actions */}
         <div className="flex space-x-3">
           <RippleButton 
-            onClick={() => navigate(`/firm/${firm.id}`)}
-            variant="secondary"
-            className="flex-1"
-          >
-            View Details
-          </RippleButton>
-          <RippleButton 
             onClick={() => window.open(firm.website_url, '_blank')}
             className="flex-1"
           >
@@ -328,62 +194,73 @@ const FirmCard = ({ firm, onCompare, isSelected }) => {
   );
 };
 
-// Home Page Component
-const HomePage = () => {
+// Statistics Component
+const StatisticsBar = ({ stats }) => {
+  if (!stats) return null;
+
+  return (
+    <GlassCard className="mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+        <div className="text-center">
+          <div className="text-3xl font-bold text-white">{stats.total_firms}</div>
+          <div className="text-purple-200 text-sm">Total Firms</div>
+        </div>
+        <div className="text-center">
+          <div className="text-3xl font-bold text-green-400">{stats.avg_profit_split}%</div>
+          <div className="text-purple-200 text-sm">Avg Profit Split</div>
+        </div>
+        <div className="text-center">
+          <div className="text-3xl font-bold text-yellow-400">{stats.avg_rating}</div>
+          <div className="text-purple-200 text-sm">Avg Rating</div>
+        </div>
+        <div className="text-center">
+          <div className="text-3xl font-bold text-blue-400">${stats.lowest_evaluation_fee}</div>
+          <div className="text-purple-200 text-sm">Lowest Fee</div>
+        </div>
+        <div className="text-center">
+          <div className="text-3xl font-bold text-purple-400">{stats.most_popular_platform}</div>
+          <div className="text-purple-200 text-sm">Top Platform</div>
+        </div>
+      </div>
+    </GlassCard>
+  );
+};
+
+// Main App Component
+function App() {
   const [firms, setFirms] = useState([]);
+  const [statistics, setStatistics] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedFirms, setSelectedFirms] = useState([]);
-  const [filters, setFilters] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchFirms();
+    fetchData();
   }, []);
 
-  const fetchFirms = async (filterParams = {}) => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams();
       
-      if (filterParams.minAccountSize) params.append('min_account_size', filterParams.minAccountSize);
-      if (filterParams.minProfitSplit) params.append('min_profit_split', filterParams.minProfitSplit);
-      if (filterParams.platform) params.append('platform', filterParams.platform);
-      if (filterParams.payoutFrequency) params.append('payout_frequency', filterParams.payoutFrequency);
-      if (filterParams.newsTrading !== undefined) params.append('news_trading', filterParams.newsTrading);
-      if (filterParams.expertAdvisors !== undefined) params.append('expert_advisors', filterParams.expertAdvisors);
-
-      const response = await axios.get(`${API}/firms?${params.toString()}`);
-      setFirms(response.data);
+      // Fetch firms and statistics
+      const [firmsResponse, statsResponse] = await Promise.all([
+        axios.get(`${API}/firms`),
+        axios.get(`${API}/statistics`)
+      ]);
+      
+      setFirms(firmsResponse.data);
+      setStatistics(statsResponse.data);
     } catch (error) {
-      console.error('Error fetching firms:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCompareToggle = (firmId) => {
-    setSelectedFirms(prev => {
-      if (prev.includes(firmId)) {
-        return prev.filter(id => id !== firmId);
-      } else if (prev.length < 4) {
-        return [...prev, firmId];
-      } else {
-        alert('Maximum 4 firms can be compared');
-        return prev;
-      }
-    });
-  };
-
-  const handleApplyFilters = () => {
-    fetchFirms(filters);
-  };
-
-  const handleCompare = () => {
-    if (selectedFirms.length >= 2) {
-      navigate(`/compare?firms=${selectedFirms.join(',')}`);
-    }
-  };
+  // Filter firms based on search
+  const filteredFirms = firms.filter(firm =>
+    firm.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    firm.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen relative">
@@ -429,177 +306,61 @@ const HomePage = () => {
 
         {/* Main Content */}
         <div className="container mx-auto px-6 pb-16">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Filters Sidebar */}
-            <div className="lg:w-1/4">
-              <FilterSidebar 
-                filters={filters}
-                setFilters={setFilters}
-                onApplyFilters={handleApplyFilters}
-              />
+          {/* Statistics */}
+          <StatisticsBar stats={statistics} />
+
+          {/* Loading */}
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="h-96 bg-white/10 rounded-3xl animate-pulse" />
+              ))}
             </div>
+          ) : (
+            <>
+              {/* Results Count */}
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-white">
+                  {filteredFirms.length} Prop Firms Found
+                </h2>
+                <p className="text-purple-200">
+                  Compare the best proprietary trading firms in the industry
+                </p>
+              </div>
 
-            {/* Firms Grid */}
-            <div className="lg:w-3/4">
-              {/* Compare Bar */}
-              {selectedFirms.length > 0 && (
-                <GlassCard className="mb-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-white font-medium">
-                      {selectedFirms.length} firm(s) selected for comparison
-                    </span>
-                    <div className="flex space-x-3">
-                      <RippleButton 
-                        onClick={() => setSelectedFirms([])}
-                        variant="ghost"
-                      >
-                        Clear
-                      </RippleButton>
-                      {selectedFirms.length >= 2 && (
-                        <RippleButton onClick={handleCompare}>
-                          Compare ({selectedFirms.length})
-                        </RippleButton>
-                      )}
-                    </div>
-                  </div>
-                </GlassCard>
-              )}
+              {/* Firms Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredFirms.map(firm => (
+                  <FirmCard key={firm.id} firm={firm} />
+                ))}
+              </div>
+            </>
+          )}
 
-              {/* Loading */}
-              {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {[...Array(6)].map((_, i) => (
-                    <div key={i} className="h-96 bg-white/10 rounded-3xl animate-pulse" />
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {firms.map(firm => (
-                    <FirmCard
-                      key={firm.id}
-                      firm={firm}
-                      onCompare={handleCompareToggle}
-                      isSelected={selectedFirms.includes(firm.id)}
-                    />
-                  ))}
-                </div>
-              )}
+          {!loading && filteredFirms.length === 0 && (
+            <div className="text-center py-16">
+              <div className="text-6xl mb-4">🔍</div>
+              <h3 className="text-2xl font-bold text-white mb-2">No firms found</h3>
+              <p className="text-purple-200">Try a different search term</p>
+            </div>
+          )}
+        </div>
 
-              {!loading && firms.length === 0 && (
-                <div className="text-center py-16">
-                  <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-2xl font-bold text-white mb-2">No firms found</h3>
-                  <p className="text-purple-200">Try adjusting your filters</p>
-                </div>
-              )}
+        {/* Footer */}
+        <div className="border-t border-white/10 bg-black/20 backdrop-blur-xl">
+          <div className="container mx-auto px-6 py-8">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-white mb-2">
+                🚀 Prop Firm Comparison Platform
+              </h3>
+              <p className="text-purple-200">
+                Your gateway to finding the perfect proprietary trading firm
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
-};
-
-// Firm Detail Page
-const FirmDetailPage = () => {
-  const { firmId } = useParams();
-  const [firm, setFirm] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchFirm();
-  }, [firmId]);
-
-  const fetchFirm = async () => {
-    try {
-      const response = await axios.get(`${API}/firms/${firmId}`);
-      setFirm(response.data);
-    } catch (error) {
-      console.error('Error fetching firm:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!firm) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-white text-xl">Firm not found</div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
-      <FloatingParticles />
-      <div className="relative z-10 container mx-auto px-6 py-20">
-        {/* Firm details implementation here */}
-        <GlassCard>
-          <h1 className="text-4xl font-bold text-white mb-4">{firm.name}</h1>
-          <p className="text-purple-200">{firm.description}</p>
-        </GlassCard>
-      </div>
-    </div>
-  );
-};
-
-// Compare Page
-const ComparePage = () => {
-  const [searchParams] = useSearchParams();
-  const [firms, setFirms] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const firmIds = searchParams.get('firms')?.split(',') || [];
-    if (firmIds.length > 0) {
-      fetchComparisonData(firmIds);
-    }
-  }, [searchParams]);
-
-  const fetchComparisonData = async (firmIds) => {
-    try {
-      const response = await axios.post(`${API}/firms/compare`, { firm_ids: firmIds });
-      setFirms(response.data.firms);
-    } catch (error) {
-      console.error('Error fetching comparison data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
-      <FloatingParticles />
-      <div className="relative z-10 container mx-auto px-6 py-20">
-        <h1 className="text-4xl font-bold text-white text-center mb-16">
-          Firm Comparison
-        </h1>
-        {/* Comparison table implementation here */}
-      </div>
-    </div>
-  );
-};
-
-// Main App Component
-function App() {
-  return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/firm/:firmId" element={<FirmDetailPage />} />
-          <Route path="/compare" element={<ComparePage />} />
-        </Routes>
-      </div>
-    </Router>
   );
 }
 
