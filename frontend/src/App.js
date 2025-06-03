@@ -781,7 +781,10 @@ function App() {
                       </RippleButton>
                       {selectedFirms.length >= 2 && (
                         <RippleButton 
-                          onClick={() => setShowComparison(true)}
+                          onClick={() => {
+                            // Show comparison in a modal instead of navigation
+                            setShowComparison(true);
+                          }}
                           className="text-sm"
                         >
                           Comparar Ahora ({selectedFirms.length})
